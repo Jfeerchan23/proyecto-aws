@@ -10,6 +10,6 @@ app.use(express.json());
 app.use("/alumnos", alumnosRoutes);
 
 const port = process.env.port || 8080;
-app.listen(port, () => {
-    console.log("server running on port", port);
-});
+app.listen(port, '0.0.0.0', () => {
+    console.log(`Server running on port ${port}`);
+  });
