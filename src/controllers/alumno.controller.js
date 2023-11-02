@@ -25,8 +25,6 @@ module.exports.uploadAlumno = (req, res) => {
         return res.status(400).json({ "Error": "Invalid Parameters" });
     }
 
-
-
     if (exist) {
         return res.status(400).json({ "Error": "Alumno already exists" });
     }
@@ -37,23 +35,6 @@ module.exports.uploadAlumno = (req, res) => {
 
     return res.status(201).json(newAlumno);
 };
-
-
-/* module.exports.uploadAlumno = (req, res) => {
-    const { id, nombres, apellidos, matricula, promedio } = req.body;
-    const exist = Alumno.searchById(id, alumnos);
-    if (!Alumno.validParams(id, nombres, apellidos, matricula, promedio)) {
-        return res.status(400).json({ "Error": "Invalid Parameters undefined" });
-    }
-    if (exist) {
-        return res.status(400).json({ "Error": "Alumno already exist" });
-    }
-    const newAlumno = { id, nombres, apellidos, matricula, promedio };
-    alumnos.push(newAlumno);
-    return res.status(201).json(newAlumno);
-};
- */
-
 
 module.exports.updateAlumno = (req, res) => {
     const { id } = req.params;
@@ -68,7 +49,20 @@ module.exports.updateAlumno = (req, res) => {
     }
 
     alumnos[alumnos.indexOf(alumnoFound)] = { ...alumnoFound, nombres, apellidos, promedio, matricula };
-    return res.status(200).json(alumnoFound);
+    return res.status(200).json("Student updated");
 
+}
+
+module.exports.deleteAlumno = (req, res) => {
+    const { id } = req.params;
+    const alumnoFound = searchById(id, alumnos);
+
+    if (alumnoFound) {
+        // Filtrar el array para excluir el alumnoFound
+        alumnos = alumnos.filter(alumno => alumno !== alumnoFound);
+        return res.status(200).json("Student deleted");
+    } else {
+        return res.status(404).json({ "Error": "Student not found" });
+    }
 }
 
