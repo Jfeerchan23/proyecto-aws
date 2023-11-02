@@ -1,8 +1,8 @@
-const {testValidID,testValidNames,testValidMatricula,testValidAverage,validParams,searchById} = require('./validations');
+const {searchById,validateTeacherData} = require('./validations');
 
 let profesores = [];
 
-/* module.exports.methodNotAllowed = (_, res) => {
+module.exports.methodNotAllowed = (_, res) => {
     res.status(405).json({ "Error": "Method not allowed" });
 }
 module.exports.getProfesores = (_, res) => {
@@ -18,10 +18,10 @@ module.exports.getProfesorById = (req, res) => {
     return res.status(200).json(profesorFound);
 }
 
-module.exports.uploadAlumno = (req, res) => {
-    const { id, nombres, apellidos, matricula, promedio } = req.body;
-    const exist = searchById(id, Profesores);
-    if (!validParams(id, nombres, apellidos, matricula, promedio)) {
+module.exports.uploadProfesor = (req, res) => {
+    const { id, nombres, apellidos, numeroEmpleado, horasClase } = req.body;
+    const exist = searchById(id, profesores);
+    if (!validateTeacherData(id, nombres, apellidos, numeroEmpleado, horasClase)) {
         return res.status(400).json({ "Error": "Invalid Parameters" });
     }
 
@@ -29,31 +29,31 @@ module.exports.uploadAlumno = (req, res) => {
         return res.status(400).json({ "Error": "Profesor already exists" });
     }
 
-    const newProfesor = { id, nombres, apellidos, matricula, promedio };
+    const newProfesor = { id, nombres, apellidos, numeroEmpleado, horasClase };
 
     profesores.push(newProfesor);
 
     return res.status(201).json(newProfesor);
 };
 
-module.exports.updateAlumno = (req, res) => {
+module.exports.updateProfesor = (req, res) => {
     const { id } = req.params;
-    const { nombres, apellidos, matricula, promedio } = req.body;
-    const profesorFound = searchById(id, Profesores);
+    const {nombres, apellidos, numeroEmpleado, horasClase} = req.body;
+    const profesorFound = searchById(id, profesores);
 
     if (!profesorFound) {
         return res.status(400).json({ "Error": "Alumno not found" });
     }
-    if (!validParams(id, nombres, apellidos, matricula, promedio)) {
+    if (!validateTeacherData(id, nombres, apellidos, numeroEmpleado, horasClase)) {
         return res.status(400).json({ "Error": "Invalid Parameters undefined" });
     }
 
-    profesores[profesores.indexOf(profesorFound)] = { ...profesorFound, nombres, apellidos, promedio, matricula };
+    profesores[profesores.indexOf(profesorFound)] = { ...profesorFound, nombres, apellidos, numeroEmpleado, horasClase };
     return res.status(200).json("Student updated");
 
 }
 
-module.exports.deleteAlumno = (req, res) => {
+module.exports.deleteProfesor = (req, res) => {
     const { id } = req.params;
     const profesorFound = searchById(id, profesores);
 
@@ -65,4 +65,3 @@ module.exports.deleteAlumno = (req, res) => {
         return res.status(404).json({ "Error": "Student not found" });
     }
 }
- */

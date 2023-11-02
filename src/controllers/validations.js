@@ -31,6 +31,11 @@ function searchById(id, arreglo) {
     return arreglo.find(a => a.id == id);
 }
 
+function validateTeacherData(id, nombre, apellido, numeroEmpleado, horasClase){
+    return testValidID(id) && testValidNames(nombre) && testValidNames(apellido) && testValidAverage(numeroEmpleado) && testValidAverage(horasClase)
+
+}
+
 
 module.exports = {
     testValidID,
@@ -38,5 +43,6 @@ module.exports = {
     testValidMatricula,
     testValidAverage,
     validParams,
-    searchById
+    searchById,
+    validateTeacherData
 };
