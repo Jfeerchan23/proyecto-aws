@@ -1,9 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const alumnosController = require('../controllers/alumno.controller');
-
-// Definir rutas y lógica aquí
-
+const alumnosController = require('../controllers/alumno.controller')
 
 router.get('/', alumnosController.getAlumnos);
 router.post("/", alumnosController.uploadAlumno);

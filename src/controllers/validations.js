@@ -1,4 +1,4 @@
-// validaciones.js
+
 
 function testValidID(idToValidate) {
     const regexParaId = new RegExp(/^[0-9]/);
@@ -10,7 +10,7 @@ function testValidNames(textoToValidate) {
     return textoToValidate != null ? regexParaTexto.test(textoToValidate) : false;
 }
 
-function testValidMatricula(matriculaToValidate) {
+function testValidEnrollment(matriculaToValidate) {
     const regexParaMatricula = new RegExp(/^A[0-9]/);
     return matriculaToValidate != null ? regexParaMatricula.test(matriculaToValidate) : false;
 }
@@ -18,11 +18,11 @@ function testValidMatricula(matriculaToValidate) {
 function testValidAverage(averageToValidate) {
     return !isNaN(averageToValidate) ? averageToValidate > 0 : false;
 }
-function validParams(id, nombre, apellido, matricula, promedio) {
+function validateStudentData(id, nombre, apellido, matricula, promedio) {
     return testValidID(id) &&
         testValidNames(nombre) &&
         testValidNames(apellido) &&
-        testValidMatricula(matricula) &&
+        testValidEnrollment(matricula) &&
         testValidAverage(promedio);
 }
 
@@ -40,9 +40,9 @@ function validateTeacherData(id, nombre, apellido, numeroEmpleado, horasClase){
 module.exports = {
     testValidID,
     testValidNames,
-    testValidMatricula,
+    testValidEnrollment,
     testValidAverage,
-    validParams,
+    validateStudentData,
     searchById,
     validateTeacherData
 };

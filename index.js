@@ -16,7 +16,6 @@ app.use(express.json());
 app.use("/alumnos", alumnosRoutes);
 app.use("/profesores", profesoresRoutes);
 
-// Middleware for 404 
 app.use((req, res, next) => {
     if (!validPath(req)) {
         res.status(404).json({

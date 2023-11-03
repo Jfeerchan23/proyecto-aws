@@ -1,4 +1,4 @@
-const {searchById,validateTeacherData} = require('./validations');
+const { searchById, validateTeacherData } = require('./validations');
 
 let profesores = [];
 
@@ -11,11 +11,11 @@ module.exports.getProfesores = (_, res) => {
 
 module.exports.getProfesorById = (req, res) => {
     const { id } = req.params;
-    const profesorFound = searchById(id, profesores);
-    if (!profesorFound) {
-        return res.status(404).json({ "Error": "Student not found" });
+    const teacherFound = searchById(id, profesores);
+    if (!teacherFound) {
+        return res.status(404).json({ "Error": "Teacher not found" });
     }
-    return res.status(200).json(profesorFound);
+    return res.status(200).json(teacherFound);
 }
 
 module.exports.uploadProfesor = (req, res) => {
@@ -29,39 +29,38 @@ module.exports.uploadProfesor = (req, res) => {
         return res.status(400).json({ "Error": "Profesor already exists" });
     }
 
-    const newProfesor = { id, nombres, apellidos, numeroEmpleado, horasClase };
+    const newTeacher = { id, nombres, apellidos, numeroEmpleado, horasClase };
 
-    profesores.push(newProfesor);
+    profesores.push(newTeacher);
 
-    return res.status(201).json(newProfesor);
+    return res.status(201).json(newTeacher);
 };
 
 module.exports.updateProfesor = (req, res) => {
     const { id } = req.params;
-    const {nombres, apellidos, numeroEmpleado, horasClase} = req.body;
-    const profesorFound = searchById(id, profesores);
+    const { nombres, apellidos, numeroEmpleado, horasClase } = req.body;
+    const teacherFound = searchById(id, profesores);
 
-    if (!profesorFound) {
-        return res.status(400).json({ "Error": "Alumno not found" });
+    if (!teacherFound) {
+        return res.status(400).json({ "Error": "Teacher not found" });
     }
     if (!validateTeacherData(id, nombres, apellidos, numeroEmpleado, horasClase)) {
         return res.status(400).json({ "Error": "Invalid Parameters undefined" });
     }
 
-    profesores[profesores.indexOf(profesorFound)] = { ...profesorFound, nombres, apellidos, numeroEmpleado, horasClase };
-    return res.status(200).json("Student updated");
+    profesores[profesores.indexOf(teacherFound)] = { ...teacherFound, nombres, apellidos, numeroEmpleado, horasClase };
+    return res.status(200).json("Teacher updated");
 
 }
 
 module.exports.deleteProfesor = (req, res) => {
     const { id } = req.params;
-    const profesorFound = searchById(id, profesores);
+    const teacherFound = searchById(id, profesores);
 
-    if (profesorFound) {
-        // Filtrar el array para excluir el profesorFound
-        profesores = profesores.filter(alumno => alumno !== profesorFound);
-        return res.status(200).json("Student deleted");
+    if (teacherFound) {
+        profesores = profesores.filter(profesor => profesor !== teacherFound);
+        return res.status(200).json("Teacher deleted");
     } else {
-        return res.status(404).json({ "Error": "Student not found" });
+        return res.status(404).json({ "Error": "Teacher not found" });
     }
 }
