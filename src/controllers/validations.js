@@ -1,18 +1,17 @@
 
-
 function testValidID(idToValidate) {
-    const regexParaId = new RegExp(/^[0-9]/);
-    return regexParaId.test(idToValidate) ? idToValidate > 0 : false;
+    const regexForID = new RegExp(/^[0-9]/);
+    return regexForID.test(idToValidate) ? idToValidate > 0 : false;
 }
 
-function testValidNames(textoToValidate) {
-    const regexParaTexto = new RegExp(/^[a-zA-ZÀ-ÿ ]+/);
-    return textoToValidate != null ? regexParaTexto.test(textoToValidate) : false;
+function testValidNames(textToValidate) {
+    const regexForText = new RegExp(/^[a-zA-ZÀ-ÿ ]+/);
+    return textToValidate != null ? regexForText.test(textToValidate) : false;
 }
 
-function testValidEnrollment(matriculaToValidate) {
-    const regexParaMatricula = new RegExp(/^A[0-9]/);
-    return matriculaToValidate != null ? regexParaMatricula.test(matriculaToValidate) : false;
+function testValidEnrollment(enrollmentToValidate) {
+    const regexForEnrollment = new RegExp(/^A[0-9]/);
+    return enrollmentToValidate != null ? regexForEnrollment.test(enrollmentToValidate) : false;
 }
 
 function testValidAverage(averageToValidate) {
@@ -26,14 +25,17 @@ function validateStudentData(id, nombre, apellido, matricula, promedio) {
         testValidAverage(promedio);
 }
 
-function searchById(id, arreglo) {
-    
-    return arreglo.find(a => a.id == id);
+function searchById(id, array) {
+
+    return array.find(a => a.id == id);
 }
 
-function validateTeacherData(id, nombre, apellido, numeroEmpleado, horasClase){
-    return testValidID(id) && testValidNames(nombre) && testValidNames(apellido) && testValidAverage(numeroEmpleado) && testValidAverage(horasClase)
-
+function validateTeacherData(id, nombre, apellido, numeroEmpleado, horasClase) {
+    return testValidID(id) &&
+        testValidNames(nombre) &&
+        testValidNames(apellido) &&
+        testValidAverage(numeroEmpleado) &&
+        testValidAverage(horasClase)
 }
 
 

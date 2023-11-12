@@ -22,11 +22,11 @@ module.exports.uploadProfesor = (req, res) => {
     const { id, nombres, apellidos, numeroEmpleado, horasClase } = req.body;
     const exist = searchById(id, profesores);
     if (!validateTeacherData(id, nombres, apellidos, numeroEmpleado, horasClase)) {
-        return res.status(400).json({ "Error": "Invalid Parameters" });
+        return res.status(400).json({ "Error": "Invalid parameters" });
     }
 
     if (exist) {
-        return res.status(400).json({ "Error": "Profesor already exists" });
+        return res.status(400).json({ "Error": "Teacher already exists" });
     }
 
     const newTeacher = { id, nombres, apellidos, numeroEmpleado, horasClase };
@@ -45,7 +45,7 @@ module.exports.updateProfesor = (req, res) => {
         return res.status(400).json({ "Error": "Teacher not found" });
     }
     if (!validateTeacherData(id, nombres, apellidos, numeroEmpleado, horasClase)) {
-        return res.status(400).json({ "Error": "Invalid Parameters undefined" });
+        return res.status(400).json({ "Error": "Invalid parameters" });
     }
 
     profesores[profesores.indexOf(teacherFound)] = { ...teacherFound, nombres, apellidos, numeroEmpleado, horasClase };
