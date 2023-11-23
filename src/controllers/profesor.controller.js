@@ -1,17 +1,19 @@
 const { searchById, validateTeacherData } = require('./validations');
+const { Profesor } = require("../models/Profesor");
 
-let profesores = [];
 
 module.exports.methodNotAllowed = (_, res) => {
     res.status(405).json({ "Error": "Method not allowed" });
 }
 module.exports.getProfesores = (_, res) => {
-    res.status(200).json(profesores);
+    Profesor.findAll().then(profesores => {
+        res.status(200).json({ profesores })
+    });
 }
 
-module.exports.getProfesorById = (req, res) => {
+module.exports.getProfesorById = async (req, res) => {
     const { id } = req.params;
-    const teacherFound = searchById(id, profesores);
+    const teacherFound = await searchById(id, Profesor);
     if (!teacherFound) {
         return res.status(404).json({ "Error": "Teacher not found" });
     }
@@ -19,48 +21,46 @@ module.exports.getProfesorById = (req, res) => {
 }
 
 module.exports.uploadProfesor = (req, res) => {
-    const { id, nombres, apellidos, numeroEmpleado, horasClase } = req.body;
-    const exist = searchById(id, profesores);
-    if (!validateTeacherData(id, nombres, apellidos, numeroEmpleado, horasClase)) {
+    const { nombres, apellidos, numeroEmpleado, horasClase } = req.body;
+  
+    if (!validateTeacherData(nombres, apellidos, numeroEmpleado, horasClase)) {
         return res.status(400).json({ "Error": "Invalid parameters" });
     }
 
-    if (exist) {
-        return res.status(400).json({ "Error": "Teacher already exists" });
-    }
+    Profesor.create({ nombres, apellidos, numeroEmpleado, horasClase })
+        .then(newTeacher => {
+            return res.status(201).json(newTeacher);
+        });
 
-    const newTeacher = { id, nombres, apellidos, numeroEmpleado, horasClase };
-
-    profesores.push(newTeacher);
-
-    return res.status(201).json(newTeacher);
 };
 
-module.exports.updateProfesor = (req, res) => {
+module.exports.updateProfesor = async (req, res) => {
     const { id } = req.params;
     const { nombres, apellidos, numeroEmpleado, horasClase } = req.body;
-    const teacherFound = searchById(id, profesores);
+    const teacherFound = searchById(id, Profesor);
 
     if (!teacherFound) {
         return res.status(400).json({ "Error": "Teacher not found" });
     }
-    if (!validateTeacherData(id, nombres, apellidos, numeroEmpleado, horasClase)) {
+    if (!validateTeacherData(nombres, apellidos, numeroEmpleado, horasClase)) {
         return res.status(400).json({ "Error": "Invalid parameters" });
     }
 
-    profesores[profesores.indexOf(teacherFound)] = { ...teacherFound, nombres, apellidos, numeroEmpleado, horasClase };
-    return res.status(200).json("Teacher updated");
+    const teacherUpdated = await Profesor.update(
+        { nombres, apellidos, numeroEmpleado, horasClase },
+        { where: { id } }
+    )
+    return res.status(200).json(teacherUpdated);
 
 }
 
-module.exports.deleteProfesor = (req, res) => {
-    const { id } = req.params;
-    const teacherFound = searchById(id, profesores);
+module.exports.deleteProfesor = async (req, res) => {
 
-    if (teacherFound) {
-        profesores = profesores.filter(profesor => profesor !== teacherFound);
-        return res.status(200).json("Teacher deleted");
-    } else {
+    const { id } = req.params;
+    const teacherFound = await searchById(id, Profesor);
+    if (!teacherFound) {
         return res.status(404).json({ "Error": "Teacher not found" });
     }
+    await Profesor.destroy({ where: { id } })
+    return res.status(200).json({ "deleted": teacherFound })
 }

@@ -4,6 +4,7 @@ const alumnosController = require('../controllers/alumno.controller')
 
 router.get('/', alumnosController.getAlumnos);
 router.post("/", alumnosController.uploadAlumno);
+router.post("/:id/email", alumnosController.enviarAlerta);
 router.get('/:id', alumnosController.getAlumnoById);
 router.put("/:id", alumnosController.updateAlumno);
 router.delete("/:id", alumnosController.deleteAlumno)

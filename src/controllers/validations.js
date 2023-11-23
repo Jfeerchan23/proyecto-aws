@@ -17,22 +17,20 @@ function testValidEnrollment(enrollmentToValidate) {
 function testValidAverage(averageToValidate) {
     return !isNaN(averageToValidate) ? averageToValidate > 0 : false;
 }
-function validateStudentData(id, nombre, apellido, matricula, promedio) {
-    return testValidID(id) &&
-        testValidNames(nombre) &&
+function validateStudentData(nombre, apellido, matricula, promedio) {
+    return  testValidNames(nombre) &&
         testValidNames(apellido) &&
         testValidEnrollment(matricula) &&
         testValidAverage(promedio);
 }
 
-function searchById(id, array) {
+async function searchById(id, ORM) {
 
-    return array.find(a => a.id == id);
+    return await ORM.findOne({ where: { id } });
 }
 
-function validateTeacherData(id, nombre, apellido, numeroEmpleado, horasClase) {
-    return testValidID(id) &&
-        testValidNames(nombre) &&
+function validateTeacherData(nombre, apellido, numeroEmpleado, horasClase) {
+    return testValidNames(nombre) &&
         testValidNames(apellido) &&
         testValidAverage(numeroEmpleado) &&
         testValidAverage(horasClase)
