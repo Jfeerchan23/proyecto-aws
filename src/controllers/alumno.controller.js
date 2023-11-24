@@ -1,7 +1,7 @@
 require("dotenv").config();
 const { validateStudentData, searchById } = require('./validations');
 const { Alumno } = require("../models/Alumno");
-const {sns} = require("../models/SNS");
+const {sns} = require("../models/AWSConfig");
 
 module.exports.methodNotAllowed = (_, res) => {
     res.status(405).json({ "Error": "Method not allowed" });
@@ -75,7 +75,7 @@ module.exports.enviarAlerta =async (req,res)=>{
     const params = {
         Message: JSON.stringify({ nombres, apellidos, promedio }),
         Subject: 'Información del alumno',
-        TopicArn: process.env.AWS_ARN // reemplaza con el ARN de tu topic SNS 'proyecto-topic'
+        TopicArn: process.env.AWS_ARN_TOPIC // reemplaza con el ARN de tu topic SNS 'proyecto-topic'
       };
       
       sns.publish(params, (err, data) => {
@@ -91,4 +91,27 @@ module.exports.enviarAlerta =async (req,res)=>{
     
 
 
+}
+
+module.exports.uploadFotoPerfil = async (req, res) => {
+    const { id } = req.params;
+    const fileLocation = req.file.location;
+    const status = await Alumno.update(
+        {
+            fotoPerfilUrl: fileLocation,
+        },
+        {
+            where: {
+                id: id,
+            },
+        }
+    )
+    if (status != 0) {
+        const alumnoFound = await searchById(id, Alumno);
+        if (!alumnoFound) {
+            return res.status(404).json({ "Error": "Not Found" });
+        }
+        return res.status(200).json(alumnoFound);
+    }
+    res.status(500).json(alumnoFound);
 }
