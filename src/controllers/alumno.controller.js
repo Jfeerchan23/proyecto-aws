@@ -1,8 +1,8 @@
 require("dotenv").config();
 const { validateStudentData, searchById } = require('./validations');
-const { generateRandomString, putItemInDynamoDB, getItemFromDynamoDB, searchItem} =require('./dyndbop');
+const { generateRandomString, putItemInDynamoDB, getItemFromDynamoDB, searchItem , updateItemInDynamoDB} = require('./dyndbop');
 const { Alumno } = require("../models/Alumno");
-const { sns} = require("../models/AWSConfig");
+const { sns, ddb } = require("../models/AWSConfig");
 const { v4: uuidv4 } = require('uuid'); // Para generar UUIDs
 
 module.exports.methodNotAllowed = (_, res) => {
@@ -127,7 +127,7 @@ module.exports.login = async (req, res) => {
     if (!studentFound) {
         return res.status(400).json({ "Error": "Student not Found" });
     }
-  
+
     if (password === studentFound.password) {
 
         const sessionString = generateRandomString(128); // Función para generar el string aleatorio
@@ -159,20 +159,54 @@ module.exports.login = async (req, res) => {
 
 }
 
-module.exports.verifySession = async (req,res)=>{
+module.exports.verifySession = async (req, res) => {
     const { id } = req.params;
     const sessionString = req.body.sessionString;
     try {
         const items = await searchItem(id, sessionString);
-        if(items.length===0){
+        if (items.length === 0) {
             return res.status(400).json({ "Error": "No active sessions" });
-        }else{
+        } else {
             return res.status(200).json(items);
 
         }
-        console.log(items);
+
     } catch (error) {
         return res.status(400).json({ "Error": error });
     }
+
+}
+
+module.exports.logout = async (req, res) => {
+    const { id } = req.params;
+    const sessionString = req.body.sessionString;
+
+    try {
+        const items = await searchItem(id, sessionString);
+        if (items.length === 0) {
+            return res.status(400).json({ "Error": "No active sessions" });
+        } else {
+            //actualizar el item
+            const uuid = items[0].id.S;
+            const updateExpression = 'SET active = :boolValue';// Usando la etiqueta para el valor booleano
+            const expressionAttributeValues = {
+                ':boolValue': { BOOL: false } // Usando una etiqueta para el valor booleano
+
+            };
+
+            updateItemInDynamoDB(uuid, updateExpression, expressionAttributeValues)
+            .then(data => {
+                return res.status(200).json(data);
+            })
+            .catch(err => {
+                return res.status(400).json({ "Error": err });
+            });
+
+        }
+
+    } catch (error) {
+        return res.status(400).json({ "Error": error });
+    }
+
 
 }

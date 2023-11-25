@@ -60,10 +60,33 @@ function searchItem(alumnoId, sessionString) {
     });
 }
 
+function updateItemInDynamoDB(uuid, updateExpression, expressionAttributeValues) {
+    return new Promise((resolve, reject) => {
+        const params = {
+            TableName: 'sesiones-alumnos',
+            Key: {
+                'id': { S: uuid }
+            },
+            UpdateExpression: updateExpression,
+            ExpressionAttributeValues: expressionAttributeValues,
+            ReturnValues: 'ALL_NEW' // Esto devuelve el elemento actualizado
+        };
+
+        ddb.updateItem(params, (err, data) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(data);
+            }
+        });
+    });
+}
+
 module.exports = {
     generateRandomString,
     putItemInDynamoDB,
     getItemFromDynamoDB,
-    searchItem
+    searchItem,
+    updateItemInDynamoDB
 };
 
