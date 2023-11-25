@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { validateStudentData, searchById } = require('./validations');
-const { generateRandomString, putItemInDynamoDB, getItemFromDynamoDB} =require('./dyndbop');
+const { generateRandomString, putItemInDynamoDB, getItemFromDynamoDB, searchItem} =require('./dyndbop');
 const { Alumno } = require("../models/Alumno");
 const { sns} = require("../models/AWSConfig");
 const { v4: uuidv4 } = require('uuid'); // Para generar UUIDs
@@ -155,6 +155,24 @@ module.exports.login = async (req, res) => {
         console.log('las contraseñas no coinciden');
 
         return res.status(400).json({ "Error": "Wrong password" });
+    }
+
+}
+
+module.exports.verifySession = async (req,res)=>{
+    const { id } = req.params;
+    const sessionString = req.body.sessionString;
+    try {
+        const items = await searchItem(id, sessionString);
+        if(items.length===0){
+            return res.status(400).json({ "Error": "No active sessions" });
+        }else{
+            return res.status(200).json(items);
+
+        }
+        console.log(items);
+    } catch (error) {
+        return res.status(400).json({ "Error": error });
     }
 
 }

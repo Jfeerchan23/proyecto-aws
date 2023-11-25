@@ -38,9 +38,32 @@ function getItemFromDynamoDB(uuid) {
     });
 }
 
+function searchItem(alumnoId, sessionString) {
+    const params = {
+        TableName: 'sesiones-alumnos',
+        FilterExpression: 'alumnoId = :alumnoId AND sessionString = :sessionString AND active = :active',
+        ExpressionAttributeValues: {
+            ':alumnoId': { N: alumnoId }, // Asumiendo que alumnoId es un número
+            ':sessionString': { S: sessionString },
+            ':active': { BOOL: true } // Asumiendo que active es un booleano
+        }
+    };
+
+    return new Promise((resolve, reject) => {
+        ddb.scan(params, (err, data) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(data.Items);
+            }
+        });
+    });
+}
+
 module.exports = {
     generateRandomString,
     putItemInDynamoDB,
-    getItemFromDynamoDB
+    getItemFromDynamoDB,
+    searchItem
 };
 
