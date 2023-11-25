@@ -17,11 +17,12 @@ function testValidEnrollment(enrollmentToValidate) {
 function testValidAverage(averageToValidate) {
     return !isNaN(averageToValidate) ? averageToValidate > 0 : false;
 }
-function validateStudentData(nombre, apellido, matricula, promedio) {
+function validateStudentData(nombre, apellido, matricula, promedio, password) {
     return  testValidNames(nombre) &&
         testValidNames(apellido) &&
         testValidEnrollment(matricula) &&
-        testValidAverage(promedio);
+        testValidAverage(promedio) &&
+        testValidNames(password)
 }
 
 async function searchById(id, ORM) {

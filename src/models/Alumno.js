@@ -14,6 +14,7 @@ Alumno.init(
         apellidos: DataTypes.STRING,
         matricula: DataTypes.STRING,
         promedio: DataTypes.FLOAT,
+        password: DataTypes.STRING,
         fotoPerfilUrl: DataTypes.STRING,
     },
     { sequelize, modelName: "alumno" }

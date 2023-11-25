@@ -11,4 +11,5 @@ AWS.config.update({
 
 const sns = new AWS.SNS();
 const s3 = new AWS.S3();
-module.exports = { sns, s3};
+const ddb = new AWS.DynamoDB();
+module.exports = { sns, s3, ddb};

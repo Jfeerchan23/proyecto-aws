@@ -7,6 +7,7 @@ router.get('/', alumnosController.getAlumnos);
 router.post("/", alumnosController.uploadAlumno);
 router.post("/:id/email", alumnosController.enviarAlerta);
 router.post("/:id/fotoPerfil", upload.single("foto"), alumnosController.uploadFotoPerfil);
+router.post("/:id/session/login", alumnosController.login);
 router.get('/:id', alumnosController.getAlumnoById);
 router.put("/:id", alumnosController.updateAlumno);
 router.delete("/:id", alumnosController.deleteAlumno)
