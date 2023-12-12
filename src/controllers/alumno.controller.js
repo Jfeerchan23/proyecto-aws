@@ -133,7 +133,7 @@ module.exports.login = async (req, res) => {
         const sessionString = generateRandomString(128); // Función para generar el string aleatorio
         const uuid = uuidv4();
         var params = {
-            TableName: 'sesiones-alumnos',
+            TableName: process.env.AWS_DYNAMODB,
             'Item': {
                 'id': { S: uuid }, // Cambiado a tipo String (S)
                 'fecha': { N: Math.floor(new Date().getTime() / 1000).toString() }, // Unix timestamp como número (N)

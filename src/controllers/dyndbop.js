@@ -1,3 +1,4 @@
+require("dotenv").config();
 const { ddb } = require("../models/AWSConfig");
 
 function generateRandomString(length) {
@@ -24,7 +25,7 @@ function putItemInDynamoDB(params) {
 function getItemFromDynamoDB(uuid) {
     return new Promise((resolve, reject) => {
         ddb.getItem({
-            TableName: 'sesiones-alumnos',
+            TableName: process.env.AWS_DYNAMODB,
             Key: {
                 'id': { S: uuid }
             }
@@ -40,7 +41,7 @@ function getItemFromDynamoDB(uuid) {
 
 function searchItem(alumnoId, sessionString) {
     const params = {
-        TableName: 'sesiones-alumnos',
+        TableName: process.env.AWS_DYNAMODB,
         FilterExpression: 'alumnoId = :alumnoId AND sessionString = :sessionString AND active = :active',
         ExpressionAttributeValues: {
             ':alumnoId': { N: alumnoId }, // Asumiendo que alumnoId es un número
@@ -63,7 +64,7 @@ function searchItem(alumnoId, sessionString) {
 function updateItemInDynamoDB(uuid, updateExpression, expressionAttributeValues) {
     return new Promise((resolve, reject) => {
         const params = {
-            TableName: 'sesiones-alumnos',
+            TableName: process.env.AWS_DYNAMODB,
             Key: {
                 'id': { S: uuid }
             },
